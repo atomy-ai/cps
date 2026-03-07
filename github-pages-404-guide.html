@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub Pages 設定教學</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+:root{
+  --navy:#003366;--navy-d:#002244;--navy-l:#1a4a8a;
+  --blue:#0066cc;--blue-l:#e8f0fb;
+  --gold:#c8a951;--gold-l:#fdf6e3;
+  --text:#1a1a2e;--muted:#6b7280;--bg:#f4f6fb;--white:#fff;
+  --border:#e2e8f0;--green:#0a7c42;--green-l:#e8f5ee;
+  --red:#c53030;--red-l:#fff5f5;--orange:#d97706;--orange-l:#fffbeb;
+  --shadow:0 2px 12px rgba(0,51,102,0.10);
+  --radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+
+/* Header */
+.header{background:var(--navy);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
+.header-inner{max-width:860px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:58px}
+.logo{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700}
+.logo-dot{width:8px;height:8px;background:var(--gold);border-radius:50%;flex-shrink:0}
+.header-badge{background:rgba(200,169,81,0.2);color:var(--gold);border:1px solid rgba(200,169,81,0.35);border-radius:20px;padding:3px 12px;font-size:12px;font-weight:600}
+
+/* Hero */
+.hero{background:linear-gradient(135deg,var(--navy-d) 0%,var(--navy-l) 100%);color:#fff;text-align:center;padding:52px 24px 60px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 65% 40%,rgba(200,169,81,0.13),transparent 55%)}
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;position:relative}
+.hero h1{font-size:26px;font-weight:700;margin-bottom:10px;line-height:1.45;position:relative}
+.hero h1 span{color:var(--gold)}
+.hero p{font-size:14px;color:rgba(255,255,255,0.72);max-width:480px;margin:0 auto 22px;position:relative;line-height:1.8}
+.hero-url{display:inline-block;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:7px;padding:7px 18px;font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(255,255,255,0.9);position:relative}
+
+/* Container */
+.container{max-width:860px;margin:0 auto;padding:44px 20px 80px}
+
+/* Diagnosis cards */
+.diag-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:36px}
+.diag-card{background:var(--white);border:2px solid var(--border);border-radius:var(--radius);padding:20px;cursor:pointer;transition:all .2s;position:relative}
+.diag-card:hover{border-color:var(--navy);box-shadow:var(--shadow);transform:translateY(-2px)}
+.diag-card.active{border-color:var(--navy);background:var(--blue-l);box-shadow:var(--shadow)}
+.diag-icon{font-size:30px;margin-bottom:10px}
+.diag-title{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:5px}
+.diag-desc{font-size:13px;color:var(--muted);line-height:1.6}
+.diag-badge{position:absolute;top:12px;right:12px;background:var(--gold);color:#fff;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700}
+
+/* Section */
+.section-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+.section-h2{font-size:21px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.section-sub{font-size:14px;color:var(--muted);margin-bottom:24px}
+
+/* Solution panels */
+.solution{display:none;animation:fadeIn .25s ease}
+.solution.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Step timeline */
+.steps{display:flex;flex-direction:column}
+.step-wrap{display:flex;gap:0;position:relative}
+.step-line{display:flex;flex-direction:column;align-items:center;width:50px;flex-shrink:0}
+.step-num{width:32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;z-index:1;box-shadow:0 0 0 4px var(--blue-l)}
+.step-connector{flex:1;width:2px;background:var(--border);margin:4px 0;min-height:16px}
+.step-wrap:last-child .step-connector{display:none}
+.step-body{flex:1;padding:2px 0 32px 10px}
+.step-tag{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--blue);text-transform:uppercase;margin-bottom:3px}
+.step-body h3{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:7px}
+.step-body p{font-size:14px;color:var(--muted);margin-bottom:10px;line-height:1.8}
+
+/* Screen mockup */
+.screen{background:#f0f2f7;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin:12px 0;box-shadow:var(--shadow)}
+.screen-bar{background:#dde1ec;padding:8px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.screen-dots{display:flex;gap:5px}
+.sd{width:10px;height:10px;border-radius:50%}
+.sd-r{background:#ff5f57}.sd-y{background:#febc2e}.sd-g{background:#28c840}
+.screen-url{flex:1;background:#fff;border-radius:4px;padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:center;border:1px solid var(--border)}
+.screen-body{padding:18px;background:#fff}
+
+/* GitHub UI mockups */
+.gh-header{background:#24292f;padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #30363d}
+.gh-logo{color:#fff;font-size:22px}
+.gh-nav{display:flex;gap:16px}
+.gh-nav-item{color:rgba(255,255,255,0.7);font-size:13px}
+.gh-nav-item.active{color:#fff;font-weight:600}
+.gh-repo-bar{background:#f6f8fa;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.gh-repo-name{font-size:14px;font-weight:600;color:var(--blue)}
+.gh-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);padding:0 16px}
+.gh-tab{padding:9px 14px;font-size:12px;color:var(--muted);border-bottom:2px solid transparent;cursor:default}
+.gh-tab.active{color:var(--text);border-bottom-color:var(--orange);font-weight:600}
+.gh-settings-nav{display:flex;gap:0}
+.gh-settings-left{width:140px;border-right:1px solid var(--border);padding:8px 0}
+.gh-settings-menu-item{padding:7px 14px;font-size:12px;color:var(--muted)}
+.gh-settings-menu-item.active{background:var(--blue-l);color:var(--navy);font-weight:600;border-left:2px solid var(--navy)}
+.gh-settings-body{flex:1;padding:16px}
+.gh-section-title{font-size:14px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.gh-label{font-size:12px;font-weight:600;margin-bottom:5px;display:block;color:var(--text)}
+.gh-select{background:#f6f8fa;border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:12px;width:140px;color:var(--text)}
+.gh-btn{display:inline-block;background:var(--green);color:#fff;border:none;border-radius:5px;padding:6px 14px;font-size:12px;font-weight:600;cursor:default}
+.gh-btn.secondary{background:#f6f8fa;color:var(--text);border:1px solid var(--border)}
+.gh-success-banner{background:#dafbe1;border:1px solid #82e09a;border-radius:6px;padding:10px 14px;font-size:12px;color:var(--green);display:flex;align-items:center;gap:8px;margin-top:12px}
+.gh-file-row{display:flex;align-items:center;gap:10px;padding:7px 16px;border-bottom:1px solid var(--border);font-size:13px}
+.gh-file-icon{font-size:15px;width:20px;text-align:center}
+.gh-file-name{color:var(--blue);font-weight:500}
+.gh-file-name.folder{color:var(--navy)}
+.gh-commit{color:var(--muted);font-size:12px;margin-left:auto}
+
+/* Callouts */
+.callout{border-radius:var(--radius);padding:12px 16px;margin:12px 0;font-size:13px;line-height:1.8;display:flex;gap:10px;align-items:flex-start}
+.callout.tip{background:var(--green-l);border-left:3px solid var(--green);color:#1a4a2e}
+.callout.warn{background:var(--gold-l);border-left:3px solid var(--gold);color:#5a3e00}
+.callout.info{background:var(--blue-l);border-left:3px solid var(--blue);color:#1a3a6e}
+.callout.error{background:var(--red-l);border-left:3px solid var(--red);color:var(--red)}
+.callout-icon{font-size:15px;flex-shrink:0;margin-top:2px}
+
+/* Code */
+.code-wrap{position:relative;margin:10px 0}
+.code-block{background:#1e2235;border-radius:7px;padding:14px 16px}
+.code-block pre{font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.8;color:#a8d8a0;white-space:pre-wrap;word-break:break-all}
+.copy-btn{position:absolute;top:8px;right:10px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);border-radius:4px;padding:3px 10px;font-size:11px;cursor:pointer;transition:all .2s}
+.copy-btn:hover{background:rgba(255,255,255,0.15);color:#fff}
+
+/* Pointer */
+.pointer{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#6a3e00;font-weight:500;background:var(--gold-l);border:1px solid rgba(200,169,81,0.25);padding:8px 12px;border-radius:6px;margin:8px 0}
+
+/* Highlight */
+.hl{background:var(--blue-l);color:var(--blue);padding:1px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600}
+.hl.green{background:var(--green-l);color:var(--green)}
+.hl.gold{background:var(--gold-l);color:#8a6200}
+.hl.red{background:var(--red-l);color:var(--red)}
+
+/* Done */
+.done-banner{background:linear-gradient(135deg,var(--navy-d),var(--navy-l));color:#fff;border-radius:12px;padding:28px;text-align:center;margin-top:36px;box-shadow:0 8px 32px rgba(0,51,102,0.15)}
+.done-banner h3{font-size:19px;font-weight:700;margin-bottom:8px}
+.done-banner p{font-size:13px;color:rgba(255,255,255,0.75);line-height:1.8}
+.done-url{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--gold);background:rgba(255,255,255,0.08);display:inline-block;padding:6px 16px;border-radius:6px;margin-top:10px}
+
+.divider{border:none;border-top:1px solid var(--border);margin:32px 0}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-inner">
+    <div class="logo"><div class="logo-dot"></div>GitHub Pages 設定教學</div>
+    <div class="header-badge">atomy-ai / cps</div>
+  </div>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-eyebrow">Troubleshooting Guide</div>
+  <h1>解決 <span>GitHub Pages 404</span> 問題</h1>
+  <p>你看到這個錯誤，代表 GitHub Pages 尚未正確設定。請選擇下方符合你狀況的情境，依步驟操作。</p>
+  <div class="hero-url">https://atomy-ai.github.io/cps/</div>
+</div>
+
+<div class="container">
+
+  <!-- Diagnosis -->
+  <div class="section-label">第一步</div>
+  <div class="section-h2">選擇你的狀況</div>
+  <div class="section-sub">點選符合你現況的情境，下方會顯示對應的解決步驟</div>
+
+  <div class="diag-grid">
+    <div class="diag-card" onclick="showSolution('A',this)">
+      <div class="diag-icon">❌</div>
+      <div class="diag-title">情況 A</div>
+      <div class="diag-desc">去 github.com/atomy-ai/cps 顯示 404，<strong>repo 根本不存在</strong></div>
+    </div>
+    <div class="diag-card" onclick="showSolution('B',this)">
+      <div class="diag-badge">最常見</div>
+      <div class="diag-icon">⚙️</div>
+      <div class="diag-title">情況 B</div>
+      <div class="diag-desc">Repo 存在，但 <strong>GitHub Pages 功能沒有開啟</strong>，Settings 裡沒設定</div>
+    </div>
+    <div class="diag-card" onclick="showSolution('C',this)">
+      <div class="diag-icon">📄</div>
+      <div class="diag-title">情況 C</div>
+      <div class="diag-desc">Repo 存在、Pages 也開了，但<strong>沒有 index.html 首頁檔案</strong></div>
+    </div>
+  </div>
+
+  <!-- Solution A -->
+  <div class="solution" id="sol-A">
+    <div class="section-label">情況 A 解決方案</div>
+    <div class="section-h2">建立新的 GitHub Repo</div>
+
+    <div class="steps">
+      <div class="step-wrap">
+        <div class="step-line"><div class="step-num">1</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <div class="step-tag">Step 01</div>
+          <h3>登入 GitHub 並建立新 Repo</h3>
+          <p>確認使用 <strong>atomy-ai</strong> 帳號登入，點右上角的 <span class="hl">＋</span> → <span class="hl">New repository</span></p>
+          <div class="screen">
+            <div class="screen-bar"><div class="screen-dots"><div class="sd sd-r"></div><div class="sd sd-y"></div><div class="sd sd-g"></div></div><div class="screen-url">github.com/new</div></div>
+            <div class="screen-body">
+              <div style="font-size:20px;font-weight:700;margin-bottom:16px;color:#24292f">Create a new repository</div>
+              <div style="margin-bottom:12px">
+                <div style="font-size:12px;font-weight:600;margin-bottom:4px">Repository name *</div>
+                <div style="border:2px solid var(--blue);border-radius:5px;padding:7px 12px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text);background:#f0f6ff">cps</div>
+              </div>
+              <div style="display:flex;gap:16px;margin-bottom:14px">
+                <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="radio" name="vis" checked> <span>🌐 Public</span></label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;color:var(--muted)"><input type="radio" name="vis"> 🔒 Private</label>
+              </div>
+              <div style="background:#f0f6ff;border:1px solid #c3d8f0;border-radius:5px;padding:8px 12px;font-size:12px;margin-bottom:14px;display:flex;align-items:center;gap:8px">
+                <input type="checkbox" checked> <span>✅ Add a README file</span>
+              </div>
+              <button style="background:#1a7f37;color:#fff;border:none;border-radius:5px;padding:8px 18px;font-size:13px;font-weight:600;cursor:pointer">Create repository</button>
+            </div>
+          </div>
+          <div class="pointer"><span>👆</span><span>Repository name 填 <strong>cps</strong>，選 <strong>Public</strong>（私有 repo 需要付費才能開 Pages），勾選 README，然後按 Create</span></div>
+        </div>
+      </div>
+
+      <div class="step-wrap">
+        <div class="step-line"><div class="step-num">2</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <div class="step-tag">Step 02</div>
+          <h3>上傳你的 index.html 檔案</h3>
+          <p>建立 repo 後，點 <span class="hl">Add file</span> → <span class="hl">Upload files</span>，把你的 HTML 檔案拖進去，確認檔名是 <span class="hl green">index.html</span></p>
+          <div class="callout warn"><span class="callout-icon">⚠️</span><span>首頁檔案<strong>一定要叫 index.html</strong>，不能是 admin.html 或其他名稱，否則會顯示 404</span></div>
+        </div>
+      </div>
+
+      <div class="step-wrap">
+        <div class="step-line"><div class="step-num">3</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <div class="step-tag">Step 03</div>
+          <h3>開啟 GitHub Pages</h3>
+          <p>接著按照下方「情況 B」的步驟開啟 Pages 功能即可。</p>
+          <button onclick="showSolution('B', null)" style="background:var(--navy);color:#fff;border:none;border-radius:6px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer">→ 跳到情況 B 的步驟</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Solution B -->
+  <div class="solution" id="sol-B">
+    <div class="section-label">情況 B 解決方案</div>
+    <div class="section-h2">開啟 GitHub Pages 功能</div>
+
+    <div class="steps">
+      <div class="step-wrap">
+        <div class="step-line"><div class="step-num">1</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <div class="step-tag">Step 01</div>
+          <h3>進入 Repo 的 Settings</h3>
+          <p>前往 <span class="hl">github.com/atomy-ai/cps</span>，點上方的 <span class="hl">Settings</span> 分頁</p>
+          <div class="screen">
+            <div class="screen-bar"><div class="screen-dots"><div class="sd sd-r"></div><div class="sd sd-y"></div><div class="sd sd-g"></div></div><div class="screen-url">github.com/atomy-ai/cps</div></div>
+            <div class="screen-body" style="padding:0">
+              <div class="gh-tabs">
+                <div class="gh-tab">💻 Code</div>
+                <div class="gh-tab">⚡ Actions</div>
+                <div class="gh-tab">📦 Packages</div>
+                <div class="gh-tab active">⚙️ Settings</div>
+              </div>
+              <div style="padding:14px 16px;font-size:13px;color:var(--muted)">設定頁面載入中...</div>
+            </div>
+          </div>
+          <div class="pointer"><span>👆</span><span>點最右邊的 <strong>Settings</strong> 分頁（有齒輪圖示）</span></div>
+        </div>
+      </div>
+
+      <div class="step-wrap">
+        <div class="step-line"><div class="step-num">2</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <div class="step-tag">Step 02</div>
+          <h3>找到左側的 Pages 選單</h3>
+          <p>在 Settings 頁面的左側選單，往下滑找到 <span class="hl">Pages</span> 並點擊</p>
+          <div class="screen">
+            <div class="screen-bar"><div class="screen-dots"><div class="sd sd-r"></div><div class="sd sd-y"></div><div class="sd sd-g"></div></div><div class="screen-url">github.com/atomy-ai/cps/settings</div></div>
+            <div class="screen-body" style="padding:0">
+              <div style="display:flex">
+                <div style="width:180px;border-right:1px solid var(--border);padding:8px 0;font-size:12px">
+                  <div style="padding:7px 14px;color:var(--muted)">General</div>
+                  <div style="padding:7px 14px;color:var(--muted)">Access</div>
+                  <div style="padding:7px 14px;color:var(--muted);font-weight:600;border-top:1px solid var(--border);margin-top:4px">Code and automation</div>
+                  <div style="padding:7px 14px;color:var(--muted)">Branches</div>
+                  <div style="padding:7px 14px;color:var(--muted)">Actions</div>
+                  <div style="padding:7px 14px;background:var(--blue-l);color:var(--navy);font-weight:700;border-left:2px solid var(--navy)">📄 Pages</div>
+                  <div style="padding:7px 14px;color:var(--muted)">Environments</div>
+                </div>
+                <div style="flex:1;padding:14px;font-size:13px;color:var(--muted)">← 點左側的 Pages</div>
+              </div>
+            </div>
+          </div>
+          <div class="pointer"><span>👆</span><span>左側選單找到 <strong>Pages</strong>（在 Code and automation 區塊下方）</span></div>
+        </div>
+      </div>
+
+      <div class="step-wrap">
+        <div class="step-line"><div class="step-num">3</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <div class="step-tag">Step 03</div>
+          <h3>設定 Branch 並儲存</h3>
+          <p>在 Pages 設定頁，找到 <strong>Build and deployment</strong> → Source 選 <span class="hl green">Deploy from a branch</span> → Branch 選 <span class="hl green">main</span> → 資料夾選 <span class="hl green">/ (root)</span> → 按 <span class="hl green">Save</span></p>
+          <div class="screen">
+            <div class="screen-bar"><div class="screen-dots"><div class="sd sd-r"></div><div class="sd sd-y"></div><div class="sd sd-g"></div></div><div class="screen-url">github.com/atomy-ai/cps/settings/pages</div></div>
+            <div class="screen-body">
+              <div style="font-size:16px;font-weight:700;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)">GitHub Pages</div>
+              <div style="font-size:13px;font-weight:600;margin-bottom:10px">Build and deployment</div>
+              <div style="margin-bottom:10px">
+                <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Source</div>
+                <select style="border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:12px;background:#f6f8fa">
+                  <option selected>Deploy from a branch</option>
+                </select>
+              </div>
+              <div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:14px">
+                <div>
+                  <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Branch</div>
+                  <select style="border:2px solid var(--blue);border-radius:5px;padding:6px 10px;font-size:12px;background:#f0f6ff;color:var(--navy);font-weight:600">
+                    <option>main</option>
+                  </select>
+                </div>
+                <div>
+                  <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Folder</div>
+                  <select style="border:2px solid var(--blue);border-radius:5px;padding:6px 10px;font-size:12px;background:#f0f6ff;color:var(--navy);font-weight:600">
+                    <option>/ (root)</option>
+                  </select>
+                </div>
+                <button style="background:#1a7f37;color:#fff;border:none;border-radius:5px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;height:32px">Save</button>
+              </div>
+              <div style="background:#dafbe1;border:1px solid #82e09a;border-radius:6px;padding:10px 14px;font-size:12px;color:#1a7f37;display:flex;align-items:center;gap:8px">
+                ✅ <span>Your site is published at <strong style="font-family:'JetBrains Mono',monospace">https://atomy-ai.github.io/cps/</strong></span>
+              </div>
+            </div>
+          </div>
+          <div class="callout tip"><span class="callout-icon">✅</span><span>按 Save 後等 <strong>1～2 分鐘</strong>，重新整理 Settings → Pages，看到綠色的 <strong>"Your site is published"</strong> 就代表成功了！</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Solution C -->
+  <div class="solution" id="sol-C">
+    <div class="section-label">情況 C 解決方案</div>
+    <div class="section-h2">新增 index.html 首頁</div>
+
+    <div class="callout error"><span class="callout-icon">❌</span><span>GitHub Pages 的首頁檔案<strong>必須命名為 index.html</strong>。如果 repo 裡只有 README.md 或其他名稱的 HTML，就會顯示 404。</span></div>
+
+    <div class="steps" style="margin-top:20px">
+      <div class="step-wrap">
+        <div class="step-line"><div class="step-num">1</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <div class="step-tag">Step 01</div>
+          <h3>確認 repo 裡的檔案</h3>
+          <p>前往 <span class="hl">github.com/atomy-ai/cps</span>，看看 Code 分頁裡有什麼檔案</p>
+          <div class="screen">
+            <div class="screen-bar"><div class="screen-dots"><div class="sd sd-r"></div><div class="sd sd-y"></div><div class="sd sd-g"></div></div><div class="screen-url">github.com/atomy-ai/cps</div></div>
+            <div class="screen-body" style="padding:0">
+              <div class="gh-file-row"><div class="gh-file-icon">📁</div><div class="gh-file-name folder">.</div><div class="gh-commit">Initial commit</div></div>
+              <div class="gh-file-row"><div class="gh-file-icon">📄</div><div class="gh-file-name" style="color:var(--red)">admin.html</div><div class="gh-commit" style="color:var(--red)">← ❌ 不是 index.html！</div></div>
+              <div class="gh-file-row"><div class="gh-file-icon">📄</div><div class="gh-file-name">README.md</div><div class="gh-commit">Initial commit</div></div>
+            </div>
+          </div>
+          <div class="pointer"><span>⚠️</span><span>如果首頁是 <strong>admin.html</strong> 或其他名稱，需要改名或另外建一個 <strong>index.html</strong></span></div>
+        </div>
+      </div>
+
+      <div class="step-wrap">
+        <div class="step-line"><div class="step-num">2</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <div class="step-tag">Step 02</div>
+          <h3>選擇其中一種方式建立 index.html</h3>
+
+          <div style="background:#f8f9fc;border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:12px">
+            <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">方式一：直接在 GitHub 上新增（最簡單）</div>
+            <div style="font-size:13px;color:var(--muted);line-height:1.8">
+              1. 在 repo 頁面點 <span class="hl">Add file</span> → <span class="hl">Create new file</span><br>
+              2. 檔案名稱填 <span class="hl green">index.html</span><br>
+              3. 內容可以先填一行 <span class="hl">&#x3C;h1&#x3E;Hello&#x3C;/h1&#x3E;</span> 測試<br>
+              4. 點 <span class="hl green">Commit changes</span>
+            </div>
+          </div>
+
+          <div style="background:#f8f9fc;border:1px solid var(--border);border-radius:8px;padding:16px">
+            <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">方式二：上傳本地的 HTML 檔案</div>
+            <div style="font-size:13px;color:var(--muted);line-height:1.8">
+              1. 把你要放的 HTML 檔案重新命名為 <span class="hl green">index.html</span><br>
+              2. 在 repo 頁面點 <span class="hl">Add file</span> → <span class="hl">Upload files</span><br>
+              3. 把 index.html 拖進上傳區域<br>
+              4. 點 <span class="hl green">Commit changes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-wrap">
+        <div class="step-line"><div class="step-num">3</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <div class="step-tag">Step 03</div>
+          <h3>等待 GitHub Actions 部署完成</h3>
+          <p>上傳後 GitHub 會自動重新部署，通常 <strong>1～3 分鐘</strong>內完成。可以到 repo 的 <span class="hl">Actions</span> 分頁查看進度。</p>
+          <div class="screen">
+            <div class="screen-bar"><div class="screen-dots"><div class="sd sd-r"></div><div class="sd sd-y"></div><div class="sd sd-g"></div></div><div class="screen-url">github.com/atomy-ai/cps/actions</div></div>
+            <div class="screen-body">
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px">
+                <span style="color:var(--green);font-size:16px">✅</span>
+                <div><div style="font-weight:600">pages build and deployment</div><div style="font-size:11px;color:var(--muted)">completed 1 minute ago</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 0;font-size:13px;color:var(--muted)">
+                <span style="color:var(--orange);font-size:16px">⏳</span>
+                <div>上一次部署（進行中...）</div>
+              </div>
+            </div>
+          </div>
+          <div class="callout tip"><span class="callout-icon">✅</span><span>看到綠色 ✅ 就代表部署完成，去 <strong>https://atomy-ai.github.io/cps/</strong> 重新整理即可</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Done -->
+  <div id="doneBanner" style="display:none">
+    <div class="done-banner">
+      <div style="font-size:44px;margin-bottom:12px">🎉</div>
+      <h3>設定完成後你的網站網址</h3>
+      <p>完成上述步驟並等待部署後，用瀏覽器打開：</p>
+      <div class="done-url">https://atomy-ai.github.io/cps/</div>
+      <p style="margin-top:16px;font-size:12px">若還是 404，請清除瀏覽器快取（Ctrl+Shift+R）再試一次</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showSolution(id, el) {
+  // Hide all
+  document.querySelectorAll('.solution').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.diag-card').forEach(c => c.classList.remove('active'));
+
+  // Show selected
+  document.getElementById('sol-'+id).classList.add('active');
+  if (el) el.classList.add('active');
+
+  document.getElementById('doneBanner').style.display = 'block';
+
+  // Smooth scroll to solution
+  setTimeout(() => {
+    document.getElementById('sol-'+id).scrollIntoView({ behavior:'smooth', block:'start' });
+  }, 100);
+}
+</script>
+</body>
+</html>
